@@ -110,3 +110,5 @@ TAGS
 
 # windsurf rules
 .windsurfrules
+
+arm_gnu_toolchain/
