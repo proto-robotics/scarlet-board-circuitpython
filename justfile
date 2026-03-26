@@ -1,7 +1,8 @@
 venv:
-	[ -d ./venv ] || python3 -m venv venv
+	[ ! -d ./venv ] || rm -rf ./venv
+	python3 -m venv venv
 
-requirements: venv
+reqs: venv
 	./venv/bin/pip3 install --upgrade -r ./requirements-doc.txt
 	./venv/bin/pip3 install --upgrade -r ./requirements-dev.txt
 
@@ -18,7 +19,7 @@ submodules:
 build-mpy-cross:
 	make -C mpy-cross
 
-install: requirements submodules build-mpy-cross
+install: reqs submodules build-mpy-cross
 
 # builds the uf2 using the given number of CPU cores
 #
@@ -27,7 +28,8 @@ install: requirements submodules build-mpy-cross
 # NOTE: must be ran after running `source ./venv/bin/activate`, which cannot be
 # run from within just
 uf2 CPUS:
-	make -C ./ports/raspberrypi/ -j{{CPUS}} BOARD=raspberry_pi_pico
+	# make -C ./ports/raspberrypi/ -j{{CPUS}} BOARD=raspberry_pi_pico
+	make -C ./ports/raspberrypi/ -j{{CPUS}} BOARD=proto_v1.1
 
 # returns the number of available CPU cores
 numcpus:
