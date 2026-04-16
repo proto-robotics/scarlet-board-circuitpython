@@ -14,12 +14,17 @@ reqs: venv
 submodules:
 	make fetch-all-submodules
 
+# fetches CircuitPython version tags, needed since this is a fork
+tags:
+	make fetch-tags
+
 # builds/rebuilds mpy-cross --- needed if micropython or the .mpy format
 # changes
 build-mpy-cross:
 	make -C mpy-cross
 
-install: reqs submodules build-mpy-cross
+install: reqs submodules tags build-mpy-cross
+	echo "NOW INSTALL arm-none-eabi"
 
 # builds the uf2 using the given number of CPU cores
 #
@@ -28,8 +33,9 @@ install: reqs submodules build-mpy-cross
 # NOTE: must be ran after running `source ./venv/bin/activate`, which cannot be
 # run from within just
 uf2 CPUS:
-	# make -C ./ports/raspberrypi/ -j{{CPUS}} BOARD=raspberry_pi_pico
-	make -C ./ports/raspberrypi/ -j{{CPUS}} BOARD=proto_v1.1
+	echo "MAKE SURE YOU HAVE ACTIVATED VENV"
+	make -C ./ports/raspberrypi/ -j{{CPUS}} BOARD=raspberry_pi_pico
+	# make -C ./ports/raspberrypi/ -j{{CPUS}} BOARD=proto_v1.1
 
 # returns the number of available CPU cores
 numcpus:
