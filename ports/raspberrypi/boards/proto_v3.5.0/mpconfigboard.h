@@ -6,8 +6,9 @@
 
 #pragma once
 
-#define MICROPY_HW_BOARD_NAME "PROTO v1.1"
+#define MICROPY_HW_BOARD_NAME "PROTO v3.5.0"
 #define MICROPY_HW_MCU_NAME "rp2040"
+#define CIRCUITPY_DRIVE_LABEL "PROTOBRAIN"
 
 #define MICROPY_HW_LED_STATUS (&pin_GPIO0)
 

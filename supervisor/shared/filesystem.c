@@ -4,6 +4,8 @@
 //
 // SPDX-License-Identifier: MIT
 
+#include <string.h>
+
 #include "supervisor/filesystem.h"
 
 #include "extmod/vfs_fat.h"
@@ -189,6 +191,18 @@ bool filesystem_init(bool create_allowed, bool force_create) {
     } else if (res != FR_OK) {
         return false;
     }
+    #ifdef CIRCUITPY_DRIVE_LABEL
+    else {
+        // An existing filesystem keeps the label it was formatted with, so
+        // rename it when the board's label has changed.
+        char label[24];
+        if (f_getlabel(&circuitpy->fatfs, label, NULL) == FR_OK &&
+            strcmp(label, CIRCUITPY_DRIVE_LABEL) != 0 &&
+            f_setlabel(&circuitpy->fatfs, CIRCUITPY_DRIVE_LABEL) == FR_OK) {
+            supervisor_flash_flush();
+        }
+    }
+    #endif
 
     circuitpy_vfs->str = "/";
     circuitpy_vfs->len = 1;

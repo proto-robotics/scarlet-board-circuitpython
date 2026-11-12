@@ -26,16 +26,19 @@ build-mpy-cross:
 install: reqs submodules tags build-mpy-cross
 	echo "NOW INSTALL arm-none-eabi"
 
-# builds the uf2 using the given number of CPU cores
+# builds the uf2 for the given board (default proto_v3.5.0) using the given
+# number of CPU cores, and copies it to ./build/<board>.uf2
 #
 # find the number of available cores using `just numcpus`
 #
 # NOTE: must be ran after running `source ./venv/bin/activate`, which cannot be
 # run from within just
-uf2 CPUS:
+uf2 CPUS BOARD="proto_v3.5.0":
 	echo "MAKE SURE YOU HAVE ACTIVATED VENV"
-	make -C ./ports/raspberrypi/ -j{{CPUS}} BOARD=raspberry_pi_pico
-	# make -C ./ports/raspberrypi/ -j{{CPUS}} BOARD=proto_v1.1
+	make -C ./ports/raspberrypi/ -j{{CPUS}} BOARD={{BOARD}}
+	mkdir -p ./build
+	cp ./ports/raspberrypi/build-{{BOARD}}/firmware.uf2 ./build/{{BOARD}}.uf2
+	echo "UF2 ready: ./build/{{BOARD}}.uf2 (copy it to the RPI-RP2 drive)"
 
 # returns the number of available CPU cores
 numcpus:
